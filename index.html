@@ -1,35 +1,130 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pesan untuk Sayang</title>
-  <link href="style.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Pesan Untukmu</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('A_digital_illustration_displays_a_warning_message_.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 320px;
+  height: auto;
+  background: url('cat_border_frame.png') no-repeat center center;
+  background-size: contain;
+  padding: 130px 30px 80px 30px;
+  text-align: center;
+    }
+
+    #teks {
+      font-size: 22px;
+      margin-top: 20px;
+      min-height: 100px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #ff69b4;
+      border: none;
+      border-radius: 10px;
+      color: white;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 30px;
+      animation: fall linear infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="overlay" id="overlay">
-    <div class="warning">
-      <p>Apakah kamu yakin ingin menekan lanjutkan?</p>
-      <button onclick="startWebsite()">Lanjutkan</button>
-    </div>
+
+  <div id="container">
+    <h2 id="peringatan">Peringatan: Apakah kamu yakin untuk menekan lanjutkan?</h2>
+    <button onclick="mulai()">Lanjutkan</button>
+    <div id="teks"></div>
   </div>
 
-  <audio id="bg-music" src="music.mp3" preload="auto"></audio>
+  <audio id="lagu" src="lagu.mp3" preload="auto"></audio>
 
-  <canvas id="particles"></canvas>
+  <script>
+    const teks = [
+      "Halooo Sayangkuu cantikku ",
+      "pesan ini buat kamuu",
+      "iyaa kamu doang pake nanya☺️",
+      "sayaangg meskipun kisah kita terbilang baru namun akan ku pastikan kisah kita akan menjadi kisah yang sangat indah yang bisa diceritakan kelak.",
+      "Aku Mencintaimu Sepertihalnya Langit Yang Selalu Indah Di segala Cuacanya",
+      "Bagi Dunia Kamu memang Satu, Namun Bagiku Kamulah Dunia Itu sendiri",
+      "Kita Kenal secara Tidak segaja,( yaa meskipun aku sendiri yang cari gara gara kadang kan :v)",
+      "namun perasaanku kepadamu Memang benar adanya dan sangat sangat tulus (no fek fek)",
+      "Terimakasih Telah kembali mewarnai hari hari gelapku",
+      "Terimakasih sayangkuu",
+      "Lovee You three thousand moree sayanggg :)"
+    ];
 
-  <div id="message-box">
-    <p id="text"></p>
-  </div>
+    function mulai() {
+      document.getElementById('peringatan').style.display = 'none';
+      document.querySelector('button').style.display = 'none';
 
-  <div class="gallery" id="gallery" style="display:none;">
-    <img src="img1.jpg" class="star-border" />
-    <img src="img2.jpg" class="star-border" />
-    <img src="img3.jpg" class="star-border" />
-    <img src="img4.jpg" class="star-border" />
-  </div>
+      const audio = document.getElementById('lagu');
+      audio.play();
 
-  <script src="script.js"></script>
+      let i = 0;
+      function tampilkanTeks() {
+        if (i < teks.length) {
+          document.getElementById('teks').innerText = teks[i];
+          i++;
+          setTimeout(tampilkanTeks, 3000);
+        }
+      }
+
+      setTimeout(tampilkanTeks, 2000);
+    }
+
+    // Tambahkan partikel lucu
+    const emojis = ["🐱", "❤️", "✨", "🌟", "💕"];
+    for (let i = 0; i < 50; i++) {
+      let emoji = document.createElement("div");
+      emoji.className = "emoji";
+      emoji.style.left = Math.random() * 100 + "vw";
+      emoji.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      document.body.appendChild(emoji);
+    }
+  </script>
 </body>
 </html>
