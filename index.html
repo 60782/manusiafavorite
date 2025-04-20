@@ -1,27 +1,30 @@
 
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Pesan Untukmu</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Love Page</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: url('A_digital_illustration_displays_a_warning_message_.png') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308') no-repeat center center fixed;
       background-size: cover;
-      color: white;
-      text-align: center;
-      height: 100vh;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
       overflow: hidden;
-    }
+    }.particle-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
 
-    #container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+.frame-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 2;
   width: 320px;
   height: auto;
@@ -29,102 +32,107 @@
   background-size: contain;
   padding: 130px 30px 80px 30px;
   text-align: center;
-    }
+}
 
-    #teks {
-      font-size: 22px;
-      margin-top: 20px;
-      min-height: 100px;
-    }
+.typed-text {
+  font-size: 18px;
+  color: #444;
+  line-height: 1.5em;
+}
 
-    button {
-      padding: 12px 25px;
-      font-size: 18px;
-      margin-top: 20px;
-      cursor: pointer;
-      background-color: #ff69b4;
-      border: none;
-      border-radius: 10px;
-      color: white;
-    }
-
-    .emoji {
-      position: absolute;
-      font-size: 30px;
-      animation: fall linear infinite;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-50px) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
   </style>
 </head>
 <body>
+  <div class="particle-container">
+    <canvas id="particles"></canvas>
+  </div>  <div class="frame-container">
+    <div id="typed" class="typed-text"></div>
+  </div>  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>  <script>
+    var typed = new Typed("#typed", {
+      strings: [
+        "Hai sayang...",
+        "Kamu tau gak?",
+        "Setiap detik bersamamu itu berharga banget.",
+        "Aku gak sabar buat ngelewatin hari-hari bareng kamu terus.",
+        "Love you always!"
+      ],
+      typeSpeed: 50,
+      backSpeed: 25,
+      backDelay: 2500,
+      loop: true
+    });
+  </script>  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particlesArray;
 
-  <div id="container">
-    <h2 id="peringatan">Peringatan: Apakah kamu yakin untuk menekan lanjutkan?</h2>
-    <button onclick="mulai()">Lanjutkan</button>
-    <div id="teks"></div>
-  </div>
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-  <audio id="lagu" src="lagu.mp3" preload="auto"></audio>
+    window.addEventListener('resize', function() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
 
-  <script>
-    const teks = [
-      "Halooo Sayangkuu cantikku ",
-      "pesan ini buat kamuu",
-      "iyaa kamu doang pake nanya☺️",
-      "sayaangg meskipun kisah kita terbilang baru namun akan ku pastikan kisah kita akan menjadi kisah yang sangat indah yang bisa diceritakan kelak.",
-      "Aku Mencintaimu Sepertihalnya Langit Yang Selalu Indah Di segala Cuacanya",
-      "Bagi Dunia Kamu memang Satu, Namun Bagiku Kamulah Dunia Itu sendiri",
-      "Kita Kenal secara Tidak segaja,( yaa meskipun aku sendiri yang cari gara gara kadang kan :v)",
-      "namun perasaanku kepadamu Memang benar adanya dan sangat sangat tulus (no fek fek)",
-      "Terimakasih Telah kembali mewarnai hari hari gelapku",
-      "Terimakasih sayangkuu",
-      "Lovee You three thousand moree sayanggg :)"
-    ];
+    const colors = ['#ff69b4', '#ffb6c1', '#ff1493', '#ffc0cb'];
 
-    function mulai() {
-      document.getElementById('peringatan').style.display = 'none';
-      document.querySelector('button').style.display = 'none';
+    function Particle(x, y, directionX, directionY, size, color) {
+      this.x = x;
+      this.y = y;
+      this.directionX = directionX;
+      this.directionY = directionY;
+      this.size = size;
+      this.color = color;
+    }
 
-      const audio = document.getElementById('lagu');
-      audio.play();
+    Particle.prototype.draw = function() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
 
-      let i = 0;
-      function tampilkanTeks() {
-        if (i < teks.length) {
-          document.getElementById('teks').innerText = teks[i];
-          i++;
-          setTimeout(tampilkanTeks, 3000);
-        }
+    Particle.prototype.update = function() {
+      if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+        this.directionX = -this.directionX;
+      }
+      if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+        this.directionY = -this.directionY;
       }
 
-      setTimeout(tampilkanTeks, 2000);
+      this.x += this.directionX;
+      this.y += this.directionY;
+      this.draw();
     }
 
-    // Tambahkan partikel lucu
-    const emojis = ["🐱", "❤️", "✨", "🌟", "💕"];
-    for (let i = 0; i < 50; i++) {
-      let emoji = document.createElement("div");
-      emoji.className = "emoji";
-      emoji.style.left = Math.random() * 100 + "vw";
-      emoji.style.animationDuration = (Math.random() * 5 + 5) + "s";
-      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-      document.body.appendChild(emoji);
+    function init() {
+      particlesArray = [];
+      let numberOfParticles = 100;
+
+      for (let i = 0; i < numberOfParticles; i++) {
+        let size = Math.random() * 3 + 1;
+        let x = Math.random() * (innerWidth - size * 2);
+        let y = Math.random() * (innerHeight - size * 2);
+        let directionX = (Math.random() - 0.5) * 1;
+        let directionY = (Math.random() - 0.5) * 1;
+        let color = colors[Math.floor(Math.random() * colors.length)];
+
+        particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+      }
     }
-  </script>
-</body>
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+      }
+    }
+
+    init();
+    animate();
+  </script></body>
 </html>
+   
